@@ -1,0 +1,121 @@
+几类问题：
+1.实体问题
+  根据公司名获取公司信息
+  根据股票名获取股票信息
+2.关系问题
+  根据公司名获取ceo信息
+  根据公司名获取高管列表
+  根据公司名获取法人信息
+  根据行业一级分类获取行业二级分类列表
+  根据行业二级分类获取公司列表
+  根据股票名获取公司信息
+  根据股票名获取价格指数 （wait）
+  根据股票名获取某日股票信息
+
+3.多跳问题  wait
+如根据行业一级分类获取公司列表
+4.连续问题  wait
+5.反置问题  wait
+如根据公司名获取行业二级分类
+
+# 根据公司名查二级行业  招商证券股份有限公司
+match (n1:Company)<-[r]-(n2:SecondIndustry) where n1.name='招商证券股份有限公司'  return n2.name
+
+# 根据人名查对应公司  王海荣
+match (n1:Company)-[r]->(n2:Person) where n2.name='王海荣'  return n1.name
+
+# 根据公司名查对应属性   招商证券股份有限公司
+prefix = match (n:Company) where n.name = '招商证券股份有限公司' return
+注册地：prefix+'n.register_location'
+注册资本：prefix+'n.register_capital'
+成立日期：prefix+'n.establish_date'
+员工数：prefix+'n.employee_num'
+退休率：prefix+'n.retire_rate'
+平均学历：prefix+'n.average_education'
+
+所有信息：prefix+'n'
+
+# 根据股票名查对应属性  华工科技
+prefix = match (n:Stock) where n.name = '华工科技' return
+股票代码: prefix+'n.stock_code'
+上市日期：prefix+'n.start_date'
+股票st率：prefix+'n.st_rate'
+
+所有信息：prefix+'n'
+
+# 根据公司名获取ceo信息  南京高科股份有限公司   ceo和法人一般只有姓名，不排除同时是高管，所以有相关信息
+prefix = match (n1:Company)-[r]->(n2:Person) where r.name = 'ceo' and n1.name='南京高科股份有限公司' return
+姓名: prefix+'n2.name'
+
+所有信息:prefix+'n2'
+
+# 根据公司名获取法人信息  南京高科股份有限公司   ceo和法人一般只有姓名，不排除同时是高管，所以有相关信息
+prefix = match (n1:Company)-[r]->(n2:Person) where r.name = '法人' and n1.name='南京高科股份有限公司' return
+姓名: prefix+'n2.name'
+
+所有信息：prefix+'n2'
+
+# 根据公司名获取高管信息  南京高科股份有限公司
+prefix = match (n1:Company)-[r]->(n2:Person) where r.name = '高管' and n1.name='南京高科股份有限公司'
+感觉这个细问属性有点离谱，只列出几个可能会被问到的
+所有姓名：prefix+'return n2.name'
+所有简历：prefix+'return n2.resume'
+所有董事会成员姓名：prefix+'and n2.title_class="董事会成员" return n2.name'
+
+所有信息 prefix+'return n2'
+
+# 根据行业一级分类获取行业二级分类列表  文化、体育和娱乐业
+名称：match (n1:FirstIndustry)-[r]->(n2:SecondIndustry) where n1.name='文化、体育和娱乐业' return n2.name
+
+# 根据行业二级分类获取公司列表 互联网和相关服务
+名称：match (n1:SecondIndustry)-[r]->(n2:Company) where n1.name='互联网和相关服务' return n2.name
+
+# 根据股票名获取公司信息  华工科技
+prefix = match (n1:Stock)-[r]->(n2:Company) where n1.name = '华工科技' return
+名称：prefix+'n2.name'
+所有信息：prefix+'n2'
+
+# 根据股票名获取某日股票信息   华工科技   2021-05-24
+prefix = match (n1:Stock)-[r1]->(n2:PriceStatistic)-[r2]->(n3:Price) where n1.name = '华工科技' and n3.date='2021-05-24' return
+开盘价：prefix+'n3.open'
+收盘价：prefix+'n3.close'
+最高价：prefix+'n3.high'
+最低价：prefix+'n3.low'
+成交数：prefix+'n3.volume'
+成交金额：prefix+'n3.money'
+
+所有信息：prefix+'n3'
+
+# 多跳问题
+根据股票查ceo、高管、法人
+根据股票查第二、第一行业
+根据公司查某日股价信息
+
+# 反置问题
+反过来的所有问题
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# 根据人名查对应属性
+职位类别：prefix = match (n:Company) where n.name = '招商证券股份有限公司' return
+职位等级：
+职位名称：
+出生年份：
+性别：
+学历：
+简历：

@@ -1,0 +1,44 @@
+// name唯一
+{n}
+List<NodeVO>
+   //必填
+    private Long graphId;
+
+    private String name;
+
+    private String label;
+
+    private float x;
+
+    private float y;
+
+    //可选
+    private String shape;
+
+    private String color;
+
+    private int node_size;
+
+    private int font_size;
+
+    private float typesetting_x;
+
+    private float typesetting_y;
+
+    private boolean isShown;
+
+{r}
+List<RelationTempVO>
+ //必填
+    private String fromName;
+
+    private String toName;
+
+    private Long graphId;
+
+    private String name;
+
+    private String label;
+
+    //可选
+    private boolean isSolid;
